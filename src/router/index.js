@@ -8,9 +8,10 @@ const routes = [
     component: EventList,
   },
   {
-    path: "/show",
+    path: "/show/:id",
     name: "event-show",
     component: () => import(/* webpackChunkName: "event-show" */ "../views/EventShow.vue"),
+    props: true
   },
   {
     path: '/show-it',
