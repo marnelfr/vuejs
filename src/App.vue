@@ -1,7 +1,8 @@
 <template>
   <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+    <router-link :to="{ name: 'event-list' }">Event List</router-link> |
+    <router-link :to="{ name: 'event-show'}">Event show</router-link> |
+    <router-link :to="{ name: 'event-create'}">Event create</router-link>
   </div>
   <router-view />
 </template>
