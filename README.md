@@ -178,20 +178,6 @@ That actual component can be call this way:
 <header title="Welcome Marnel" />
 ```
 
-## View component
-View component are the building block of a view app. They contain:
-- the **template**: by default in **html**. we can add ``lang="pug`` for
-  exemple if we want to use the pug language.
-- the **script**: by default in **javascript**. We can switch ``ts`` if wanted.
-- the **style** bloc that can also be writen in ``scss``.\
-  The ``scope`` attribute make the style be applied to the current component only.
-
-But in such of case, we'll have to install the compiler need. To use scss for
-exemple, we should consider installing ``sass-loader`` and ``node-sass``.
-
-To know what to install in such of case, take a look at [Vue loader doc](https://vue-loader.vuejs.org/guide/pre-processors.html)
-
-
 ## Routing
 - Routes can have ``aliases``
 - A route path can be redirected to another one.
@@ -199,12 +185,16 @@ To know what to install in such of case, take a look at [Vue loader doc](https:/
 - Route params can be accessed in a template through ``$route.params.username``
 - We can access route params as props
 ````javascript
+// defining a route
 {
   path: "/show/:id",
   name: "event-show",
   component: () => import(/* webpackChunkName: "event-show" */ "../views/EventShow.vue"),
   props: true
 }
+
+// using a route
+<router-link class="event-link" :to="{ name: 'event-show', params: { id: 1 }}">Event Show</router-link>
 ````
 `````html
 <template>
@@ -216,3 +206,49 @@ To know what to install in such of case, take a look at [Vue loader doc](https:/
   }
 </script>
 `````
+
+## View component
+View component are the building block of a view app. They contain:
+- the **template**: by default in **html**. we can add ``lang="pug"`` by
+  example if we want to use the pug language.
+- the **script**: by default in **javascript**. We can switch ``ts`` if wanted.
+- the **style** bloc that can also be written in ``scss``.\
+  The ``scope`` attribute make the style be applied to the current component only.
+
+But in such of case, we'll have to install the compiler needed. To use scss by
+example, we should consider installing ``sass-loader`` and ``node-sass``.
+
+To know what to install in such of case, take a look at [Vue loader doc](https://vue-loader.vuejs.org/guide/pre-processors.html)
+
+## Nested component
+Components can be nested to others. To do so, we simply need to 
+define our component and then import it inside the parent component:
+````javascript
+import EventCard from '@/components/EventCard.vue';
+import EventBarre from '@/components/EventBarre.vue';
+export default {
+  components: {
+    EventCard,
+    EventBarre
+  },
+}
+````
+Then, the component can be used like this:
+````html
+<template>
+  <div>
+    <EventCard />
+    <EventBarre />
+  </div>
+</template>
+````
+
+
+
+
+
+
+
+
+
+
