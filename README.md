@@ -95,7 +95,7 @@ const app = Vue.createApp({
 })
 ````
 ``computed properties`` are built based on our data and their value is updated when on of
-properties their are based on change. Their can be used as our data in views:
+properties they are based on, change. Their can be used as our data in views:
 ````html
 <div class="product-info">
   <h1>{{ title }}</h1>
@@ -114,7 +114,7 @@ app.component('compenent-name', {
     }
     //...
   },
-  template: /*the html template*/,
+  template: '/*the html template*/',
   data() {return {}},
   methods: {
     addToCart() {
@@ -131,14 +131,14 @@ Once created, we can use it other template:
 
 ## Communicating events
 To send data to our component parents vue, we emit event in our methods doing this:
-````javascript`
+````javascript
 //----
 addToCart() {
 this.$emit('event-name', this.props1)
 }
 //----
 ````
-the component which emit that event should listen to it in order to performe some 
+The component which emit that event should listen to it in order to performe some 
 operation or call one of the parent's method:
 ````html
 <component-name @event-name="updateCart" :props1="valueProps1"></compenent-name>
@@ -159,13 +159,14 @@ argument of ``this.$emit()``
 </template>
 <script>
   export default {
+    name: 'Header',
     props:
       {
         title: String,
       },
   };
 </script>
-<style scope >
+<style scope>
   h1 {
     color: blue;
   }
@@ -175,17 +176,19 @@ argument of ``this.$emit()``
 That actual component can be call this way:
 
 ```html
-<header title="Welcome Marnel" />
+<Header title="Welcome to VueJs course by Marnel" />
 ```
 
 ## Routing
-- Routes can have ``aliases``
-- A route path can be redirected to another one.
+- Routes can have ``aliases``. But we shouldn't use them if we care about CEO:
+``{path: "/create", alias: "/created"}``
+- A route path can be redirected to another one: ``{path: "/show-it", redirect: {name: 'event-show'}}``
 - A route can receive route-parameters that can ``/user/:username``
 - Route params can be accessed in a template through ``$route.params.username``
-- We can access route params as props
+- We can access route params as props. For that, simply add ``props: true`` to our route definition
+and receive the ``props`` inside the component:
 ````javascript
-// defining a route
+// defining a route in router/index.js
 {
   path: "/show/:id",
   name: "event-show",
@@ -193,10 +196,11 @@ That actual component can be call this way:
   props: true
 }
 
-// using a route
+// using a route inside NavBar.vue
 <router-link class="event-link" :to="{ name: 'event-show', params: { id: 1 }}">Event Show</router-link>
 ````
 `````html
+<!--inside EventShow.vue-->
 <template>
   <h1>Event show page #{{ id }}</h1>
 </template>

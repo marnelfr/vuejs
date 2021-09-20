@@ -13,14 +13,12 @@ const routes = [
     component: () => import(/* webpackChunkName: "event-show" */ "../views/EventShow.vue"),
     props: true
   },
-  {
-    path: '/show-it',
-    redirect: {name: 'event-show'}
-  },
+  {path: "/show-it", redirect: {name: 'event-show'}},
   {
     path: "/create",
     name: "event-create",
-    component: () => import(/* webpackChunkName: "event-create" */ "../views/EventCreate")
+    component: () => import(/* webpackChunkName: "event-create" */ "../views/EventCreate"),
+    alias: "/created"
   }
 ];
 
