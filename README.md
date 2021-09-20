@@ -233,6 +233,7 @@ export default {
   },
 }
 ````
+
 Then, the component can be used like this:
 ````html
 <template>
