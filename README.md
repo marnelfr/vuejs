@@ -244,8 +244,58 @@ Then, the component can be used like this:
 </template>
 ````
 
+## Global component 
+In case we've got a component that will be use many time in our application,
+we can import it globally:
+````javascript
+// main.js
+import { createApp } from "vue";
+import App from "./App.vue";
+import router from "./router";
+import store from "./store";
+import BaseIcon from '@/components/BaseIcon.vue';
+
+const app = createApp(App).use(store).use(router);
+app.component('BaseIcon', BaseIcon); // registering globally our component
+app.mount("#app");
+````
+Henceforth, it can be used in any component without additional importation.
+
+However, if we've got **lodash** added, it may be better to auto register our global component like so:
+````javascript
+import { createApp } from "vue";
+import App from "./App.vue";
+import router from "./router";
+import store from "./store";
+import upperFirst from 'lodash/upperFirst'
+import camelCase from 'lodash/camelCase'
+
+const app = createApp(App).use(store).use(router);
+
+const requireComponent = require.context(
+    './components/base',
+    false,
+    /[A-Z]\w+\.(vue|js)$/
+)
+
+requireComponent.keys().forEach(fileName => {
+    const componentConfig = requireComponent(fileName)
+
+    const componentName = upperFirst(
+        camelCase(
+            fileName.replace(/^\.\/(.*)\.\w+$/, '$1')
+        )
+    )
+
+    app.component(
+        componentName.replace('Base', ''),
+        componentConfig.default || componentConfig
+    )
+})
 
 
+app.mount("#app");
+````
 
 
 

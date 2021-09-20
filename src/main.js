@@ -28,6 +28,5 @@ requireComponent.keys().forEach(fileName => {
     )
 })
 
-// app.component('BaseIcon', BaseIcon);
 
 app.mount("#app");
