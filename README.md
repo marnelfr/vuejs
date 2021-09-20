@@ -271,31 +271,67 @@ import upperFirst from 'lodash/upperFirst'
 import camelCase from 'lodash/camelCase'
 
 const app = createApp(App).use(store).use(router);
-
 const requireComponent = require.context(
-    './components/base',
-    false,
-    /[A-Z]\w+\.(vue|js)$/
+    './components/base', // global component directory (personnal convention)
+    false, // are we considering componnent in sub-directories?
+    /[A-Z]\w+\.(vue|js)$/ // regular expression maching component's name
 )
-
 requireComponent.keys().forEach(fileName => {
     const componentConfig = requireComponent(fileName)
-
+    // reformating the component name in case we've got component named like 'base-icon'
     const componentName = upperFirst(
         camelCase(
             fileName.replace(/^\.\/(.*)\.\w+$/, '$1')
         )
     )
-
+    // registering the component
     app.component(
-        componentName.replace('Base', ''),
+        componentName.replace('Base', ''), // personnal convention 
         componentConfig.default || componentConfig
     )
 })
-
-
 app.mount("#app");
 ````
+
+## Slots
+Can be used in a component to set a place for outside elements:
+````html
+<!--Defining our component: BaseButton-->
+<template>
+  <div>
+    <button><slot>Submit</slot></button>
+  </div>
+</template>
+
+<!--Using our component-->
+<template>
+  <div>
+    <BaseButton>Add</BaseButton>
+  </div>
+</template>
+````
+In case no value wouldn't be provided, **Submit** will be used.
+We can use **named slot**:
+````html
+<!--Defining our component: BaseButton-->
+<template>
+  <div>
+    <button><slot>Submit</slot></button>
+    <slot name="body"></slot>
+  </div>
+</template>
+
+<!--Using our component-->
+<template>
+  <div>
+    <BaseButton>
+      Add
+      <p slot="body">Lorem ip sun and doron ele</p>
+    </BaseButton>
+  </div>
+</template>
+````
+In case we have a lot of named slot, we can let one of them without name.
 
 
 
