@@ -1,5 +1,11 @@
 # Real Word Vue 3
 
+```
+git remote add origin git@github.com:marnelfr/vuejs.git
+git branch -M main
+git push -u origin main
+```
+
 ## Install Vue CLI
 ```
 yarn global add @vue/cli
@@ -21,7 +27,7 @@ While creating our project,
 - I used history mode for the router
 - Then selected **ESLint + Prettier** and **Lint on save**
 - And finally choosed **Dedicated config files**
-  
+
 We can use the vue ui that's very useful
 ```
 vue ui
