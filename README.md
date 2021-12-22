@@ -94,8 +94,8 @@ const app = Vue.createApp({
   }
 })
 ````
-``computed properties`` are built based on our data and their value is updated when on of
-properties they are based on, change. Their can be used as our data in views:
+``computed properties`` are built based on our data and their value is updated when one of the
+properties they are based on, changes. Their can be used as data in template:
 ````html
 <div class="product-info">
   <h1>{{ title }}</h1>
@@ -103,7 +103,7 @@ properties they are based on, change. Their can be used as our data in views:
 ````
 
 ## Components and props
-We can create component using
+We can create component doing
 ````javascript
 // In /components/ComponentName.js
 app.component('compenent-name', {
@@ -114,7 +114,7 @@ app.component('compenent-name', {
     }
     //...
   },
-  template: '/*the html template*/',
+  template: '/*the html template of the component*/',
   data() {return {}},
   methods: {
     addToCart() {
@@ -124,7 +124,7 @@ app.component('compenent-name', {
   computed: {}
 })
 ````
-Once created, we can use it other template:
+Once created, we can use it in other template:
 ````html
 <component-name :props1="valueProps1"></compenent-name>
 ````
@@ -147,6 +147,21 @@ Our ``updateCart(props1Value)`` will receive the argument send through the secon
 argument of ``this.$emit()``
 
 
+## Forms & v-model
+When working with form, 
+- We can use **v-model** to two ways binding.
+- Using **v-model.type** cast to the **type** specified
+- **@submit.prevent="onSubmit"** is used to prevent the default submition and provide
+the method (**onSubmit** here) used to submit the form
+
+````html
+<form @submit.prevent="onSubmit">
+  <input v-model="name">
+  <input v-model.number="age">
+</form>
+````
+
+
 ## Basic layout of a Vue Component
 
 ```html
@@ -160,10 +175,10 @@ argument of ``this.$emit()``
 <script>
   export default {
     name: 'Header',
-    props:
-      {
-        title: String,
-      },
+    props: {
+      title: String,
+      required: true
+    },
   };
 </script>
 <style scope>
@@ -183,7 +198,7 @@ That actual component can be call this way:
 - Routes can have ``aliases``. But we shouldn't use them if we care about CEO:
 ``{path: "/create", alias: "/created"}``
 - A route path can be redirected to another one: ``{path: "/show-it", redirect: {name: 'event-show'}}``
-- A route can receive route-parameters that can ``/user/:username``
+- A route can receive route-parameters: ``/user/:username``
 - Route params can be accessed in a template through ``$route.params.username``
 - We can access route params as props. For that, simply add ``props: true`` to our route definition
 and receive the ``props`` inside the component:
@@ -197,7 +212,7 @@ and receive the ``props`` inside the component:
 }
 
 // using a route inside NavBar.vue
-<router-link class="event-link" :to="{ name: 'event-show', params: { id: 1 }}">Event Show</router-link>
+<router-link class="event-link" :to="{ name: 'event-show', params: { id: 1 } }">Event Show</router-link>
 ````
 `````html
 <!--inside EventShow.vue-->
