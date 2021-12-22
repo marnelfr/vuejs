@@ -256,4 +256,40 @@ the method (**onSubmit** here) used to submit the form
 So when want to apply a style or display an html element to our app, 
 we should consider adding it to the **App.vue** file.
 
-Time: 23.34
+
+
+## Routing
+- Routes can have ``aliases``. But we shouldn't use them if we care about CEO:
+``{path: "/create", alias: "/created"}``
+- A route path can be redirected to another one: ``{path: "/show-it", redirect: {name: 'event-show'}}``
+- A route can receive route-parameters: ``/user/:username``
+- Route params can be accessed in a template through ``$route.params.username``
+- We can access route params as props. For that, simply add ``props: true`` to our route definition
+and receive the ``props`` inside the component:
+````javascript
+// defining a route in router/index.js
+{
+  path: "/show/:id",
+  name: "event-show",
+  component: () => import(/* webpackChunkName: "event-show" */ "../views/EventShow.vue"),
+  props: true
+}
+Using **webpackChunkName** split our index.html in order to only pre-load the needed components.
+
+// using a route inside NavBar.vue
+<router-link class="event-link" :to="{ name: 'event-show', params: { id: 1 } }">Event Show</router-link>
+````
+`````html
+<!--inside EventShow.vue-->
+<template>
+  <h1>Event show page #{{ id }}</h1>
+</template>
+<script>
+  export default {
+    props: ['id'],
+  }
+</script>
+`````
+
+
+## Axios
