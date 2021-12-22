@@ -255,3 +255,5 @@ the method (**onSubmit** here) used to submit the form
 **App.vue** is the parent of every component in our vue app.
 So when want to apply a style or display an html element to our app, 
 we should consider adding it to the **App.vue** file.
+
+Time: 23.34
