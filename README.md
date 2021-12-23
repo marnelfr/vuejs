@@ -292,4 +292,58 @@ Using **webpackChunkName** split our index.html in order to only pre-load the ne
 `````
 
 
-## Axios
+## API calls with Axios
+To install: ```npm install axios```
+It's include many features such as:
+- GET, POST, PUT, and DELETE requests
+- Add authentication to each request
+- Set timeouts if requests take too long
+- Configure defaults for every request
+- Handle errors and cancel requests properly
+- Properly serialize and deserialize requests & responses
+- ...
+Usage example:
+````javascript
+import axios from 'axios'
+
+axios.get('url').then(response => {
+  // access response.data and use it...
+}).catch(error =>  {
+  // handle the error
+})
+````
+Since every component has a lifecycle such as 
+- beforeCreate, created
+- beforeMount, mounted
+- beforeUpdate, updated
+- beforeUnmount, unmounted
+- errorCaptured
+- renderTracked
+- renderTriggered
+
+We can make our **API Call** in the **created** hook.
+
+## Reorganizing our code into a service layer
+````javascript
+// in @/services/EventService.js
+import axios from 'axios'
+
+const apiClient = axios.create({
+  baseURL: 'http://my-json-server.typicode.com/marnelfr/vuejs',
+  withCredentials: false,
+  headers: {
+    Accept: 'application/json',
+    'Content-Type': 'application/json'
+  }
+})
+
+export default {
+  getEventList() {
+    return apiClient.get('/events')
+  }
+}
+````
+We can then import our service and use it this way:
+````javascript
+EventService.getEventList().then().catch()
+````
