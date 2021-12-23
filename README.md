@@ -265,6 +265,7 @@ we should consider adding it to the **App.vue** file.
 - A route can receive route-parameters: ``/user/:username``
 - Route params can be accessed in a template through ``$route.params.username``
 - We can access route params as props. For that, simply add ``props: true`` to our route definition
+- Rather than hard coding route link, we can access them through their **name** and provide their **params**
 and receive the ``props`` inside the component:
 ````javascript
 // defining a route in router/index.js

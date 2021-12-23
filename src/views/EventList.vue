@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>Events list</h1>
-    <div v-if="events !== null" class="events">
+    <div v-if="events" class="events">
       <EventCard v-for="event in events" :key="event.id" :event="event" />
     </div>
     <div v-else>
