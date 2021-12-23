@@ -1,8 +1,11 @@
 <template>
   <div>
     <h1>Events list</h1>
-    <div class="events">
+    <div v-if="events !== null" class="events">
       <EventCard v-for="event in events" :key="event.id" :event="event" />
+    </div>
+    <div v-else>
+      <p>Loading...</p>
     </div>
   </div>
 </template>
@@ -10,6 +13,7 @@
 <script>
 // @ is an alias to /src
 import EventCard from '@/components/EventCard.vue'
+import axios from 'axios'
 
 export default {
   name: 'EventList',
@@ -18,43 +22,18 @@ export default {
   },
   data() {
     return {
-      events: [
-        {
-          id: 54654,
-          category: 'animal',
-          title: 'Cat Adoption',
-          description: 'Portez ce vieux whisky au juge blond qui fume',
-          location: 'Meow Town',
-          date: 'January 28, 2022',
-          time: '12:00',
-          petsAllowed: true,
-          organizer: 'Nel Gnac',
-        },
-        {
-          id: 54655,
-          category: 'technologie',
-          title: 'New serveur released',
-          description: 'Anything that cost you your peace is too expensive',
-          location: 'New York',
-          date: 'February 02, 2022',
-          time: '10:00',
-          petsAllowed: true,
-          organizer: 'Mar Gnac',
-        },
-        {
-          id: 54656,
-          category: 'science',
-          title: 'New Maths',
-          description:
-            'Une patience infinie produit toujours des résultats immédiats',
-          location: 'Chine',
-          date: 'November 28, 2022',
-          time: '14:00',
-          petsAllowed: true,
-          organizer: 'Nel Gnac',
-        },
-      ],
+      events: null,
     }
+  },
+  created() {
+    axios
+      .get('http://my-json-server.typicode.com/marnelfr/vuejs/events')
+      .then((response) => {
+        this.events = response.data
+      })
+      .catch((error) => {
+        console.log('error', error)
+      })
   },
 }
 </script>
