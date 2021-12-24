@@ -294,7 +294,7 @@ Using **webpackChunkName** split our index.html in order to only pre-load the ne
 
 
 ## API calls with Axios
-To install: ```npm install axios```
+To install: ```npm install axios```\
 It's include many features such as:
 - GET, POST, PUT, and DELETE requests
 - Add authentication to each request
