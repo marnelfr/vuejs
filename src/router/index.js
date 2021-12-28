@@ -19,24 +19,32 @@ const routes = [
   },
   {
     path: '/event/:id',
-    name: 'EventDetails',
+    name: 'EventLayout',
     component: () =>
-      import(/* webpackChunkName: "details" */ '@/views/event/Details.vue'),
+      import(/* webpackChunkName: "details" */ '@/views/event/Layout.vue'),
     props: true,
-  },
-  {
-    path: '/event/:id',
-    name: 'EventRegister',
-    component: () =>
-      import(/* webpackChunkName: "details" */ '@/views/event/Register.vue'),
-    props: true,
-  },
-  {
-    path: '/event/:id',
-    name: 'EventEdit',
-    component: () =>
-      import(/* webpackChunkName: "details" */ '@/views/event/Edit.vue'),
-    props: true,
+    children: [
+      {
+        path: '',
+        name: 'EventDetails',
+        component: () =>
+          import(/* webpackChunkName: "details" */ '@/views/event/Details.vue'),
+      },
+      {
+        path: 'register',
+        name: 'EventRegister',
+        component: () =>
+          import(
+            /* webpackChunkName: "details" */ '@/views/event/Register.vue'
+          ),
+      },
+      {
+        path: 'edit',
+        name: 'EventEdit',
+        component: () =>
+          import(/* webpackChunkName: "details" */ '@/views/event/Edit.vue'),
+      },
+    ],
   },
 ]
 
