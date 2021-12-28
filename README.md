@@ -479,3 +479,33 @@ const routes = [
     redirect: to => ({path: '/event/' + to.params.afterEventId})
   }
 ]
+
+
+## Programmatic Navigation
+We can use **this.$router.push** to redirect programmatically.
+````javascript
+this.$router.push('/about')
+this.$router.push({path: '/about'})
+this.$router.push({name: 'About'})
+this.$router.push({name: 'Event', params: {id: this.event.id}})
+this.$router.push({name: 'Event', query: {id: this.event.id}})
+````
+
+Even route-link used actually call the **this.$router.push**.
+`````html
+<router-link :to="{name: 'EventDetails', params: {id: 5}}"></router-link>
+`````
+This correspond to 
+````javascript
+this.$router.push({name: 'EventDetails', params: {id: 5}})
+````
+
+We can even navigate without pushing an history entry into the browser. 
+This is done using the **this.$router.replace** method.
+````javascript
+// Will replace the current page by the EventDetails page.
+this.$router.replace({name: 'EventDetails', params: {id: 5}})
+````
+
+``this.$router.go(1)`` is used to call the browser's **forward button**
+``this.$router.go(-1)`` is used to call the browser's **back button**
