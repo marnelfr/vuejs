@@ -436,5 +436,46 @@ They will then use the id parameter present in the url.
 ````html
 <router-link 
   :to="{ name: 'EventDetails'}"
->Details</router-link >
+>Details</router-link>
 ````
+
+
+## Redirect and Aliases
+We can add **alias** to our route but we should if we care
+about SEO since they will then be to page path in our app leading to 
+the same page. Google could think of a cheating. 
+````javascript
+const routes = [
+  {
+    path: "/about",
+    component: "About",
+    name: "About"
+    alias: "/about-us"
+  }
+]
+````
+
+Instead of adding an alias to our route, we can redirect another path (then route)
+to it.
+````javascript
+const routes = [
+  {
+    path: "/about",
+    component: "About",
+    name: "About"
+  },{
+    path: "/about-us",
+    redirect: {name: "About"}
+  },{
+    path: "/event/:id",
+    name: "EventDetails"
+  },{
+    path: "/event-details/:id",
+    // We can omit providing the param here
+    redirect: to => ({name: 'EventDetails', params: {id: to.params.id}})
+  },{
+    path: "/eventing/:afterEventId(.*)",
+    // We can proceed this way in case we've got more than just one param 
+    redirect: to => ({path: '/event/' + to.params.afterEventId})
+  }
+]
