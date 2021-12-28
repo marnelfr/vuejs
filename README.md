@@ -431,7 +431,8 @@ const routes = [
 ]
 ````
 
-Our nested route can even be defined without the params
+Our nested route can even be defined without the params. 
+They will then use the id parameter present in the url.
 ````html
 <router-link 
   :to="{ name: 'EventDetails'}"
