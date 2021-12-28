@@ -375,3 +375,65 @@ When **reactive objects** that are accessed inside the callback change, the call
 In a vue component, props and our data are reactive.
 
 ```response.headers['x-total-count']``` returns the total record from the API called event if there is an limit.
+
+
+
+## Nested routes
+We can create nested routes using a ``layout``, a ``router-view`` and ``children`` 
+attributes while defining our routes.
+- We define a PATH leading to the **layout** view.
+- Our layout contains the **router-view** that will be fulled by the template of nested routes. It can send props to them
+- Our PATH (can receive props) have the **children** attribute, an array, containing the nested routes that can't receive props
+
+````html
+<!-- Layout.vue -->
+<template>
+  <div>
+    <div class="nav">
+      <router-link 
+        :to="{ name: 'EventDetails', params: { id } }"
+      >Details</router-link>
+      <router-link 
+        :to="{ name: 'EventRegister', params: { id } }"
+      >Register</router-link>
+    </div>
+
+    <!-- Sending props to the nested templates -->
+    <router-view :event="event" />
+  </div>
+</template>
+````
+````javascript
+const routes = [
+  {
+    path: '/event/:id',
+    name: 'EventLayout',
+    component: () =>
+      import(/* webpackChunkName: "details" */ '@/views/event/Layout.vue'),
+    props: true,
+    children: [
+      {
+        path: '', //will be loaded at the route of the parent path
+        name: 'EventDetails',
+        component: () =>
+          import(/* webpackChunkName: "details" */ '@/views/event/Details.vue'),
+      },
+      {
+        path: 'register',
+        name: 'EventRegister',
+        component: () =>
+          import(
+            /* webpackChunkName: "details" */ '@/views/event/Register.vue'
+          ),
+      }
+    ],
+  },
+]
+````
+
+Our nested route can even be defined without the params
+````html
+<router-link 
+  :to="{ name: 'EventDetails'}"
+>Details</router-link >
+````
