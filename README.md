@@ -348,3 +348,30 @@ We can then import our service and use it this way:
 ````javascript
 EventService.getEventList().then().catch()
 ````
+
+
+## Routing
+
+for path: localhost/events?page=7
+```$router.query.page```
+
+for path: localhost/events/:page
+```$router.params.page```
+
+
+for path: localhost/events?e=3
+````javascript
+const routes = [
+	{
+		path: '/',
+		props: (route) => ({ newName: route.query.e})
+	}
+]
+````
+We can receive the e value through **newName** in our template
+
+```vue.watchEffect(callback)```
+When **reactive objects** that are accessed inside the callback change, the callback is run again.\
+In a vue component, props and our data are reactive.
+
+```response.headers['x-total-count']``` returns the total record from the API called event if there is an limit.

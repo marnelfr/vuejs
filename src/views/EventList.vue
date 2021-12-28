@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="events">
     <h1>Events list</h1>
-    <div v-if="events" class="events">
+    <div v-if="events">
       <EventCard v-for="event in events" :key="event.id" :event="event" />
     </div>
     <div v-else>
@@ -29,13 +29,13 @@
 </template>
 <script>
 // @ is an alias to /src
-import EventCard from "@/components/EventCard.vue";
-import EventService from "@/services/EventService.js";
-import { watchEffect } from "vue";
+import EventCard from '@/components/EventCard.vue'
+import EventService from '@/services/EventService.js'
+import { watchEffect } from 'vue'
 
 export default {
-  name: "EventList",
-  props: ["page"],
+  name: 'EventList',
+  props: ['page'],
   components: {
     EventCard,
   },
@@ -43,29 +43,29 @@ export default {
     return {
       events: null,
       totalEvent: 0,
-    };
+    }
   },
   created() {
     watchEffect(() => {
-      this.events = null;
+      this.events = null
       EventService.getEventList(this.page)
         .then((response) => {
-          this.events = response.data;
-          this.totalEvent = response.headers["x-total-count"];
-          console.log(this.totalEvent);
+          this.events = response.data
+          this.totalEvent = response.headers['x-total-count']
+          console.log(this.totalEvent)
         })
         .catch((error) => {
-          console.log("error", error);
-        });
-    });
+          console.log('error', error)
+        })
+    })
   },
   computed: {
     hasNextPage() {
-      const totalPage = Math.ceil(this.totalEvent / 2);
-      return this.page < totalPage;
+      const totalPage = Math.ceil(this.totalEvent / 2)
+      return this.page < totalPage
     },
   },
-};
+}
 </script>
 
 <style scoped>
@@ -76,15 +76,17 @@ export default {
 }
 .pagination {
   display: flex;
-  text-align: center;
+  width: 290px;
 }
 .pagination a {
   flex: 1;
+  text-decoration: none;
+  color: black;
 }
 #prev-link {
-  float: left;
+  text-align: left;
 }
 #next-link {
-  float: right;
+  text-align: right;
 }
 </style>
