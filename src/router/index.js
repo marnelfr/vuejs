@@ -4,8 +4,8 @@ import EventList from '@/views/EventList.vue'
 const routes = [
   {
     path: '/',
-    name: 'EventList',
-    component: EventList,
+    name: 'EventDetails',
+    component: EventDetails,
     props: (router) => ({ page: Number.parseInt(router.query.page) || 1 }),
   },
   {
