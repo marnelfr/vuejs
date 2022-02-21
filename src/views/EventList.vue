@@ -1,60 +1,69 @@
 <template>
-  <div>
+  <div class="events">
     <h1>Events list</h1>
-    <div class="events">
+    <div v-if="events">
       <EventCard v-for="event in events" :key="event.id" :event="event" />
+    </div>
+    <div v-else>
+      <p>Loading...</p>
+    </div>
+    <div class="pagination">
+      <router-link
+        id="prev-link"
+        v-if="page > 1"
+        :to="{ name: 'EventList', query: { page: page - 1 } }"
+        rel="prev"
+      >
+        &#60; Previous
+      </router-link>
+      <router-link
+        id="next-link"
+        v-if="hasNextPage"
+        :to="{ name: 'EventList', query: { page: page + 1 } }"
+        rel="next"
+      >
+        Next &#62;
+      </router-link>
     </div>
   </div>
 </template>
-
 <script>
 // @ is an alias to /src
 import EventCard from '@/components/EventCard.vue'
+import EventService from '@/services/EventService.js'
+import { watchEffect } from 'vue'
 
 export default {
   name: 'EventList',
+  props: ['page'],
   components: {
     EventCard,
   },
   data() {
     return {
-      events: [
-        {
-          id: 54654,
-          category: 'animal',
-          title: 'Cat Adoption',
-          description: 'Portez ce vieux whisky au juge blond qui fume',
-          location: 'Meow Town',
-          date: 'January 28, 2022',
-          time: '12:00',
-          petsAllowed: true,
-          organizer: 'Nel Gnac',
-        },
-        {
-          id: 54655,
-          category: 'technologie',
-          title: 'New serveur released',
-          description: 'Anything that cost you your peace is too expensive',
-          location: 'New York',
-          date: 'February 02, 2022',
-          time: '10:00',
-          petsAllowed: true,
-          organizer: 'Mar Gnac',
-        },
-        {
-          id: 54656,
-          category: 'science',
-          title: 'New Maths',
-          description:
-            'Une patience infinie produit toujours des résultats immédiats',
-          location: 'Chine',
-          date: 'November 28, 2022',
-          time: '14:00',
-          petsAllowed: true,
-          organizer: 'Nel Gnac',
-        },
-      ],
+      events: null,
+      totalEvent: 0,
     }
+  },
+  created() {
+    watchEffect(() => {
+      this.events = null
+      EventService.getEventList(this.page)
+        .then((response) => {
+          this.events = response.data
+          this.totalEvent = response.headers['x-total-count']
+          console.log(this.totalEvent)
+        })
+        .catch((error) => {
+          console.log('error', error)
+        })
+    })
+  },
+  computed: {
+    hasNextPage() {
+      const totalPage = Math.ceil(this.totalEvent / 2)
+      return this.page < totalPage
+    },
   },
 }
 </script>
@@ -64,5 +73,20 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+.pagination {
+  display: flex;
+  width: 290px;
+}
+.pagination a {
+  flex: 1;
+  text-decoration: none;
+  color: black;
+}
+#prev-link {
+  text-align: left;
+}
+#next-link {
+  text-align: right;
 }
 </style>

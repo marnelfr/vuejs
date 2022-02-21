@@ -265,6 +265,7 @@ we should consider adding it to the **App.vue** file.
 - A route can receive route-parameters: ``/user/:username``
 - Route params can be accessed in a template through ``$route.params.username``
 - We can access route params as props. For that, simply add ``props: true`` to our route definition
+- Rather than hard coding route link, we can access them through their **name** and provide their **params**
 and receive the ``props`` inside the component:
 ````javascript
 // defining a route in router/index.js
@@ -292,4 +293,219 @@ Using **webpackChunkName** split our index.html in order to only pre-load the ne
 `````
 
 
-## Axios
+## API calls with Axios
+To install: ```npm install axios```\
+It's include many features such as:
+- GET, POST, PUT, and DELETE requests
+- Add authentication to each request
+- Set timeouts if requests take too long
+- Configure defaults for every request
+- Handle errors and cancel requests properly
+- Properly serialize and deserialize requests & responses
+- ...
+Usage example:
+````javascript
+import axios from 'axios'
+
+axios.get('url').then(response => {
+  // access response.data and use it...
+}).catch(error =>  {
+  // handle the error
+})
+````
+Since every component has a lifecycle such as 
+- beforeCreate, created
+- beforeMount, mounted
+- beforeUpdate, updated
+- beforeUnmount, unmounted
+- errorCaptured
+- renderTracked
+- renderTriggered
+
+We can make our **API Call** in the **created** hook.
+
+## Reorganizing our code into a service layer
+````javascript
+// in @/services/EventService.js
+import axios from 'axios'
+
+const apiClient = axios.create({
+  baseURL: 'http://my-json-server.typicode.com/marnelfr/vuejs',
+  withCredentials: false,
+  headers: {
+    Accept: 'application/json',
+    'Content-Type': 'application/json'
+  }
+})
+
+export default {
+  getEventList() {
+    return apiClient.get('/events')
+  }
+}
+````
+We can then import our service and use it this way:
+````javascript
+EventService.getEventList().then().catch()
+````
+
+
+## Routing
+
+for path: localhost/events?page=7
+```$router.query.page```
+
+for path: localhost/events/:page
+```$router.params.page```
+
+
+for path: localhost/events?e=3
+````javascript
+const routes = [
+	{
+		path: '/',
+		props: (route) => ({ newName: route.query.e})
+	}
+]
+````
+We can receive the e value through **newName** in our template
+
+```vue.watchEffect(callback)```
+When **reactive objects** that are accessed inside the callback change, the callback is run again.\
+In a vue component, props and our data are reactive.
+
+```response.headers['x-total-count']``` returns the total record from the API called event if there is an limit.
+
+
+
+## Nested routes
+We can create nested routes using a ``layout``, a ``router-view`` and ``children`` 
+attributes while defining our routes.
+- We define a PATH leading to the **layout** view.
+- Our layout contains the **router-view** that will be fulled by the template of nested routes. It can send props to them
+- Our PATH (can receive props) have the **children** attribute, an array, containing the nested routes that can't receive props
+
+````html
+<!-- Layout.vue -->
+<template>
+  <div>
+    <div class="nav">
+      <router-link 
+        :to="{ name: 'EventDetails', params: { id } }"
+      >Details</router-link>
+      <router-link 
+        :to="{ name: 'EventRegister', params: { id } }"
+      >Register</router-link>
+    </div>
+
+    <!-- Sending props to the nested templates -->
+    <router-view :event="event" />
+  </div>
+</template>
+````
+````javascript
+const routes = [
+  {
+    path: '/event/:id',
+    name: 'EventLayout',
+    component: () =>
+      import(/* webpackChunkName: "details" */ '@/views/event/Layout.vue'),
+    props: true,
+    children: [
+      {
+        path: '', //will be loaded at the route of the parent path
+        name: 'EventDetails',
+        component: () =>
+          import(/* webpackChunkName: "details" */ '@/views/event/Details.vue'),
+      },
+      {
+        path: 'register',
+        name: 'EventRegister',
+        component: () =>
+          import(
+            /* webpackChunkName: "details" */ '@/views/event/Register.vue'
+          ),
+      }
+    ],
+  },
+]
+````
+
+Our nested route can even be defined without the params. 
+They will then use the id parameter present in the url.
+````html
+<router-link 
+  :to="{ name: 'EventDetails'}"
+>Details</router-link>
+````
+
+
+## Redirect and Aliases
+We can add **alias** to our route but we should if we care
+about SEO since they will then be to page path in our app leading to 
+the same page. Google could think of a cheating. 
+````javascript
+const routes = [
+  {
+    path: "/about",
+    component: "About",
+    name: "About"
+    alias: "/about-us"
+  }
+]
+````
+
+Instead of adding an alias to our route, we can redirect another path (then route)
+to it.
+````javascript
+const routes = [
+  {
+    path: "/about",
+    component: "About",
+    name: "About"
+  },{
+    path: "/about-us",
+    redirect: {name: "About"}
+  },{
+    path: "/event/:id",
+    name: "EventDetails"
+  },{
+    path: "/event-details/:id",
+    // We can omit providing the param here
+    redirect: to => ({name: 'EventDetails', params: {id: to.params.id}})
+  },{
+    path: "/eventing/:afterEventId(.*)",
+    // We can proceed this way in case we've got more than just one param 
+    redirect: to => ({path: '/event/' + to.params.afterEventId})
+  }
+]
+
+
+## Programmatic Navigation
+We can use **this.$router.push** to redirect programmatically.
+````javascript
+this.$router.push('/about')
+this.$router.push({path: '/about'})
+this.$router.push({name: 'About'})
+this.$router.push({name: 'Event', params: {id: this.event.id}})
+this.$router.push({name: 'Event', query: {id: this.event.id}})
+````
+
+Even route-link used actually call the **this.$router.push**.
+`````html
+<router-link :to="{name: 'EventDetails', params: {id: 5}}"></router-link>
+`````
+This correspond to 
+````javascript
+this.$router.push({name: 'EventDetails', params: {id: 5}})
+````
+
+We can even navigate without pushing an history entry into the browser. 
+This is done using the **this.$router.replace** method.
+````javascript
+// Will replace the current page by the EventDetails page.
+this.$router.replace({name: 'EventDetails', params: {id: 5}})
+````
+
+``this.$router.go(1)`` is used to call the browser's **forward button**
+``this.$router.go(-1)`` is used to call the browser's **back button**
