@@ -1,4 +1,4 @@
-# Real Word Vue 3
+# Coding with an real word vue3 app
 
 ```
 git remote add origin git@github.com:marnelfr/vuejs.git
