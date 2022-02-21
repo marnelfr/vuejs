@@ -1,4 +1,4 @@
-# Real Word Vue 3
+# Real World Vue 3 App
 
 ```
 git remote add origin git@github.com:marnelfr/vuejs.git
