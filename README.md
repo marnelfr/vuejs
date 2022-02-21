@@ -1,4 +1,4 @@
-# Real World Vue 3 App
+# Learning vue3 frontend framework
 
 ```
 git remote add origin git@github.com:marnelfr/vuejs.git

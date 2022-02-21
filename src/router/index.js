@@ -4,8 +4,8 @@ import EventList from '@/views/EventList.vue'
 const routes = [
   {
     path: '/',
-    name: 'EventList',
-    component: EventList,
+    name: 'Event',
+    component: Event,
   },
   {
     path: '/about',
